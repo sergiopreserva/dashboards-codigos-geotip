@@ -1,0 +1,14 @@
+// Traída de la base de datos
+var portal = Portal('https://www.arcgis.com/');
+// Creación de un feature set denominado fs
+// fs tabla temporal con datos procesados
+// la función featurebyportalitem trae ciertos campos
+var fs = FeatureSetByPortalItem(
+  portal,
+  '9e2f2b544c954fda9cd13b7f3e6eebce', // id del elemento
+  0,
+  ['eventTime', 'place', 'mag', 'depth', 'alert', 'hoursOld', 'url'],
+  false
+);
+// organización del evento más reciente por DESC, 1
+return Top(OrderBy(fs, 'eventTime DESC'), 1);
