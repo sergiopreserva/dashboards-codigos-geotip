@@ -1,0 +1,105 @@
+var link = Portal('https://www.arcgis.com/');
+
+// =====================================================
+// 1. CAPA DE PAÍSES
+// =====================================================
+var paises = FeatureSetByPortalItem(
+    link,
+    'ac80670eb213440ea5899bbf92a04998',
+    0,
+    ['COUNTRY', 'ISO_CC'],
+    // "True" para traer la geometría de los elementos
+    true
+);
+
+// =====================================================
+// 2. CAPA DE SISMOS
+// =====================================================
+var sismos = FeatureSetByPortalItem(
+    link,
+    '9e2f2b544c954fda9cd13b7f3e6eebce',
+    0,
+    ['mag', 'hoursOld', 'eventTime'],
+    // "True" para traer la geometría de los elementos
+    true
+);
+
+// =====================================================
+// 3. FILTRAR SISMOS
+// =====================================================
+// magnitud mayor o igual a 4 y las últimas 168 horas (7 días)
+// el campo hours old hace referencia a la antigüedad del sismo
+var mag4 = Filter(sismos, 'mag >= 4 AND hoursOld <= 168');
+
+// Filtramos la base de datos nuevamente para evitar congestión
+// en el procesamiento
+var Topmag4 = Top(
+    OrderBy(mag4, 'eventTime DESC'),
+    100
+);
+
+// =====================================================
+// 4. HACER RESUMEN POR PAÍS
+// =====================================================
+var resumen = {};
+
+for (var q in Topmag4) {
+// Creación del nuevo feature set que coinciden espacialmente
+// Las capas deben tener un sistema de referencia definido 
+
+    var paisFS = Intersects(Geometry(q), paises);
+    var pais = First(paisFS);
+// Conteo de sismos por país
+    if (!IsEmpty(pais)) {
+
+        var nombrePais = Text(pais['COUNTRY']);
+
+        if (HasKey(resumen, nombrePais)) {
+            resumen[nombrePais]['quake_count'] += 1;
+        } else {
+            resumen[nombrePais] = {
+                country: nombrePais,
+                quake_count: 1
+            };
+        }
+    }
+}
+
+// =====================================================
+// 5. CONVERTIR EL RESUMEN A FEATURES
+// =====================================================
+var features = [];
+
+for (var k in resumen) {
+    Push(features, {
+        attributes: {
+            country: resumen[k]['country'],
+            quake_count: resumen[k]['quake_count']
+        }
+    });
+}
+
+// =====================================================
+// 6. CREAR FEATURESET AGRUPADO ESPACIALMENTE
+// =====================================================
+// Creación de un nuevo diccionario ordenado
+var out_dict = {
+    fields: [
+        { name: 'country', type: 'esriFieldTypeString' },
+        { name: 'quake_count', type: 'esriFieldTypeInteger' }
+    ],
+    geometryType: '',
+    features: features
+};
+// Creación del feature set
+var fs_out = FeatureSet(out_dict);
+
+// =====================================================
+// 7. ORDENAR Y TOMAR LOS 5 PRIMEROS (Feature set final)
+// =====================================================
+var top5 = Top(
+    OrderBy(fs_out, 'quake_count DESC'),
+    5
+);
+
+return top5;
