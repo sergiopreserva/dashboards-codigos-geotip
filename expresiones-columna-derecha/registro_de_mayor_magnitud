@@ -1,0 +1,11 @@
+var portal = Portal('https://www.arcgis.com/');
+
+var fs = FeatureSetByPortalItem(
+  portal,
+  '9e2f2b544c954fda9cd13b7f3e6eebce',
+  0,
+  ['eventTime', 'place', 'mag', 'depth', 'alert', 'hoursOld', 'url'],
+  false
+);
+// ordenado por magnitud
+return Top(OrderBy(fs, 'mag DESC'), 1);
