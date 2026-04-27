@@ -12,10 +12,10 @@ Este repositorio contiene expresiones desarrolladas en Arcade para apoyar la con
 dashboards-codigos-geotip/
 │
 ├── expresiones-columna-derecha/
-│   └── Códigos utilizados para mostrar registros clasificados por tiempo
+│   └── Códigos utilizados para mostrar registros clasificados por magnitud
 │
 ├── expresiones-columna-izquierda/
-│   └── Códigos utilizados para mostrar registros, clasificados por magnitud
+│   └── Códigos utilizados para mostrar registros, clasificados por tiempo
 │
 ├── expresion_interseccion_espacial.arcade
 │   └── Expresión para relacionar espacialmente los sismos con la capa de países.
