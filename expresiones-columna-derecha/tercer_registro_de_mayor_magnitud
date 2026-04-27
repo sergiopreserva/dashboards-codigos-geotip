@@ -1,0 +1,18 @@
+var portal = Portal('https://www.arcgis.com/');
+
+var fs = FeatureSetByPortalItem(
+  portal,
+  '9e2f2b544c954fda9cd13b7f3e6eebce',
+  0,
+  ['OBJECTID', 'eventTime', 'place', 'mag', 'depth', 'alert', 'hoursOld', 'url'],
+  false
+);
+
+// Orden estable: más reciente primero
+var ordenado = OrderBy(fs, 'mag DESC');
+
+// Toma los 3 más recientes
+var top3 = Top(ordenado, 3);
+
+// De esos 3, devuelve el más antiguo = tercero más reciente
+return Top(OrderBy(top3, 'mag ASC'), 1);
