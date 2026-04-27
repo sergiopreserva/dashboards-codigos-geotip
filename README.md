@@ -4,7 +4,7 @@ Repositorio de scripts Arcade utilizados en ArcGIS Dashboards para consultar, fi
 
 ## Descripción
 
-Este repositorio contiene expresiones desarrolladas en Arcade para apoyar la construcción de un geotip o dashboard de eventos sísmicos. Los códigos permiten consumir capas desde ArcGIS Online, filtrar sismos por magnitud y tiempo, realizar cruces espaciales con capas de países y generar salidas personalizadas para elementos de ArcGIS Dashboards.
+Este repositorio contiene expresiones desarrolladas en Arcade para apoyar la construcción del geotip y dashboard de eventos sísmicos. Los códigos permiten consumir capas desde ArcGIS Online, filtrar sismos por magnitud y tiempo, realizar cruces espaciales con capas de países y generar salidas personalizadas para elementos de ArcGIS Dashboards.
 
 ## Estructura del repositorio
 
